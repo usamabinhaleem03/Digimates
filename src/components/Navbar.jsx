@@ -4,16 +4,40 @@ import { Menu, X, ArrowRight } from 'lucide-react'
 import LogoMark from './Logo'
 import { scrollToId } from './Effects'
 import { ease } from './motion-utils'
+import { useLang } from '../i18n'
+import { LANGS } from '../content'
 
-export const NAV_LINKS = [
-  { id: 'about', label: 'About' },
-  { id: 'services', label: 'Services' },
-  { id: 'process', label: 'How it works' },
-  { id: 'testimonials', label: 'Testimonials' },
-  { id: 'contact', label: 'Contact' },
-]
+export const NAV_IDS = ['about', 'services', 'areas', 'tech', 'offer', 'contact']
+
+function LangSwitch({ className = '' }) {
+  const { lang, setLang, t } = useLang()
+  return (
+    <div className={`lang-switch ${className}`} role="group" aria-label={t.nav.langLabel} translate="no">
+      {LANGS.map((l) => (
+        <button
+          key={l}
+          type="button"
+          className={lang === l ? 'active' : ''}
+          aria-pressed={lang === l}
+          onClick={() => setLang(l)}
+        >
+          {lang === l && (
+            <motion.span
+              layoutId="lang-pill"
+              className="lang-pill"
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            />
+          )}
+          <span>{l.toUpperCase()}</span>
+        </button>
+      ))}
+    </div>
+  )
+}
 
 export default function Navbar({ ready }) {
+  const { t } = useLang()
+  const NAV_LINKS = NAV_IDS.map((id) => ({ id, label: t.nav.links[id] }))
   const { scrollY } = useScroll()
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -34,7 +58,7 @@ export default function Navbar({ ready }) {
         entries.forEach((e) => e.isIntersecting && setActive(e.target.id === 'top' ? '' : e.target.id)),
       { rootMargin: '-45% 0px -50% 0px' },
     )
-    ;[{ id: 'top' }, ...NAV_LINKS].forEach(({ id }) => {
+    ;['top', ...NAV_IDS].forEach((id) => {
       const el = document.getElementById(id)
       if (el) obs.observe(el)
     })
@@ -77,19 +101,22 @@ export default function Navbar({ ready }) {
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     )}
-                    {l.label}
+                    <span>{l.label}</span>
                   </a>
                 </li>
               ))}
             </ul>
 
-            <a href="#contact" className="btn btn-primary nav-cta" onClick={(e) => go(e, 'contact')}>
-              Get a quote <ArrowRight size={16} className="arrow" />
-            </a>
+            <div className="nav-right">
+              <LangSwitch />
+              <a href="#contact" className="btn btn-primary nav-cta" onClick={(e) => go(e, 'contact')}>
+                {t.nav.cta} <ArrowRight size={16} className="arrow" />
+              </a>
+            </div>
 
             <button
               className="nav-toggle"
-              aria-label={open ? 'Close menu' : 'Open menu'}
+              aria-label={open ? t.nav.menuClose : t.nav.menuOpen}
               onClick={() => setOpen((o) => !o)}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -138,7 +165,7 @@ export default function Navbar({ ready }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
             >
-              Get a quote <ArrowRight size={16} />
+              {t.nav.cta} <ArrowRight size={16} />
             </motion.a>
           </motion.div>
         )}

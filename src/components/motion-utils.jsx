@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   motion,
   useInView,
@@ -56,21 +56,23 @@ export function SplitText({ text, className, delay = 0, stagger = 0.06, gradient
 export function Counter({ to, suffix = '', prefix = '', duration = 2 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
-  const [val, setVal] = useState(0)
+  // Write the number straight into the DOM: smoother than re-rendering every
+  // frame, and unaffected by browser auto-translate swapping React's text nodes.
   useEffect(() => {
-    if (!inView) return
+    if (!inView || !ref.current) return
+    const el = ref.current
     const controls = animate(0, to, {
       duration,
       ease: 'easeOut',
-      onUpdate: (v) => setVal(Math.round(v)),
+      onUpdate: (v) => {
+        el.textContent = `${prefix}${Math.round(v)}${suffix}`
+      },
     })
     return () => controls.stop()
-  }, [inView, to, duration])
+  }, [inView, to, duration, prefix, suffix])
   return (
-    <span ref={ref}>
-      {prefix}
-      {val}
-      {suffix}
+    <span ref={ref} translate="no">
+      {`${prefix}0${suffix}`}
     </span>
   )
 }
@@ -105,7 +107,7 @@ export function Magnetic({ children, strength = 0.35 }) {
 }
 
 /** 3D tilt card with a cursor-following spotlight */
-export function TiltCard({ children, className, max = 10, ...rest }) {
+export function TiltCard({ children, className, max = 10, style, ...rest }) {
   const ref = useRef(null)
   const px = useMotionValue(0.5)
   const py = useMotionValue(0.5)
@@ -131,7 +133,7 @@ export function TiltCard({ children, className, max = 10, ...rest }) {
     <motion.div
       ref={ref}
       className={className}
-      style={{ rotateX: rx, rotateY: ry, transformPerspective: 900 }}
+      style={{ ...style, rotateX: rx, rotateY: ry, transformPerspective: 900 }}
       onMouseMove={onMove}
       onMouseLeave={reset}
       {...rest}
