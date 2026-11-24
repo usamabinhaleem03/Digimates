@@ -11,6 +11,7 @@ import {
 import { ArrowUp, Cookie } from 'lucide-react'
 import LogoMark from './Logo'
 import { ease } from './motion-utils'
+import { useLang } from '../i18n'
 
 /* ---------- Smooth scrolling (Lenis) ---------- */
 let lenisInstance = null
@@ -102,6 +103,7 @@ export function CursorGlow() {
 
 /* ---------- Back to top ---------- */
 export function BackToTop() {
+  const { t } = useLang()
   const { scrollY } = useScroll()
   const [show, setShow] = useState(false)
   useMotionValueEvent(scrollY, 'change', (v) => setShow(v > 900))
@@ -110,7 +112,7 @@ export function BackToTop() {
       {show && (
         <motion.button
           className="to-top"
-          aria-label="Back to top"
+          aria-label={t.toTop}
           initial={{ opacity: 0, scale: 0.5, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
@@ -129,6 +131,7 @@ export function BackToTop() {
 const COOKIE_KEY = 'digimates-cookie-choice'
 
 export function CookieBanner({ ready }) {
+  const { t } = useLang()
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -166,18 +169,18 @@ export function CookieBanner({ ready }) {
           transition={{ duration: 0.6, ease }}
         >
           <h4>
-            <Cookie size={18} /> We value your privacy
+            <Cookie size={18} /> {t.cookie.title}
           </h4>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. We use cookies to improve your
-            experience. See our <a href="#datenschutz">Datenschutz</a>.
+            {t.cookie.text}
+            <a href="#datenschutz">{t.footer.privacy}</a>.
           </p>
           <div className="cookie-actions">
             <button className="btn btn-primary" onClick={() => choose('all')}>
-              Accept all
+              {t.cookie.accept}
             </button>
             <button className="btn btn-ghost" onClick={() => choose('essential')}>
-              Essential only
+              {t.cookie.essential}
             </button>
           </div>
         </motion.div>

@@ -6,7 +6,8 @@ import {
   useMotionValue,
   useSpring,
 } from 'motion/react'
-import { ArrowRight, Play, Rocket, TrendingUp, Sparkles } from 'lucide-react'
+import { ArrowRight, Play, Workflow, Network, Sparkles } from 'lucide-react'
+import { useLang } from '../i18n'
 import { SplitText, Counter, ease } from './motion-utils'
 import { scrollToId } from './Effects'
 
@@ -36,6 +37,7 @@ const BARS = [
 ]
 
 function NetworkVisual({ ready }) {
+  const { t } = useLang()
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
   const rx = useSpring(useTransform(my, [-0.5, 0.5], [12, -12]), { stiffness: 80, damping: 15 })
@@ -210,11 +212,11 @@ function NetworkVisual({ ready }) {
         }}
       >
         <span className="ic">
-          <TrendingUp size={18} />
+          <Network size={18} />
         </span>
         <div>
-          <b>+148%</b>
-          <small>Lorem conversions</small>
+          <b>{t.hero.cardA.title}</b>
+          <small>{t.hero.cardA.sub}</small>
         </div>
       </motion.div>
 
@@ -230,11 +232,11 @@ function NetworkVisual({ ready }) {
         }}
       >
         <span className="ic">
-          <Rocket size={18} />
+          <Workflow size={18} />
         </span>
         <div>
-          <b>Live in 10 days</b>
-          <small>Ipsum dolor sit</small>
+          <b>{t.hero.cardB.title}</b>
+          <small>{t.hero.cardB.sub}</small>
         </div>
       </motion.div>
     </motion.div>
@@ -242,6 +244,7 @@ function NetworkVisual({ ready }) {
 }
 
 export default function Hero({ ready }) {
+  const { t, lang } = useLang()
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const yText = useTransform(scrollYProgress, [0, 1], [0, 160])
@@ -280,14 +283,15 @@ export default function Hero({ ready }) {
       <div className="container hero-inner">
         <motion.div style={{ y: yText, opacity: fade }}>
           <motion.span className="eyebrow" {...fadeUp(0.1)}>
-            <Sparkles size={14} color="#22d3ee" /> Digital agency · Lorem ipsum
+            <Sparkles size={14} color="#22d3ee" /> {t.hero.eyebrow}
           </motion.span>
 
           <h1>
             {ready && (
               <SplitText
-                text="We build digital experiences that grow your business"
-                gradientWords={[2, 3]}
+                key={lang}
+                text={t.hero.title}
+                gradientWords={t.hero.gradientWords}
                 delay={0.2}
                 stagger={0.07}
                 immediate
@@ -296,8 +300,7 @@ export default function Hero({ ready }) {
           </h1>
 
           <motion.p className="hero-sub" {...fadeUp(0.7)}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua — turning visitors into enquiries.
+            {t.hero.sub}
           </motion.p>
 
           <motion.div className="hero-actions" {...fadeUp(0.85)}>
@@ -310,7 +313,7 @@ export default function Hero({ ready }) {
                   scrollToId('contact')
                 }}
               >
-                Start your project <ArrowRight size={18} className="arrow" />
+                {t.hero.primary} <ArrowRight size={18} className="arrow" />
               </motion.a>
               <motion.a
                 href="#services"
@@ -321,25 +324,17 @@ export default function Hero({ ready }) {
                   scrollToId('services')
                 }}
               >
-                <Play size={16} /> Explore services
+                <Play size={16} /> {t.hero.secondary}
               </motion.a>
           </motion.div>
 
           <motion.div className="hero-stats" {...fadeUp(1)}>
-            <div>
-              <strong className="grad-text">
-                {ready && <Counter to={120} suffix="+" />}
-              </strong>
-              <span>Projects delivered</span>
-            </div>
-            <div>
-              <strong className="grad-text">{ready && <Counter to={98} suffix="%" />}</strong>
-              <span>Happy clients</span>
-            </div>
-            <div>
-              <strong className="grad-text">{ready && <Counter to={7} suffix=" yrs" />}</strong>
-              <span>Experience</span>
-            </div>
+            {t.hero.stats.map((st) => (
+              <div key={st.label}>
+                <strong className="grad-text">{ready && <Counter to={st.to} suffix={st.suffix} />}</strong>
+                <span>{st.label}</span>
+              </div>
+            ))}
           </motion.div>
         </motion.div>
 

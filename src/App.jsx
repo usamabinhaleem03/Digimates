@@ -1,12 +1,17 @@
 import { useCallback, useState } from 'react'
 import { AnimatePresence, MotionConfig } from 'motion/react'
+import { LangProvider } from './i18n'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import {
-  LogoMarquee,
+  TechMarquee,
   About,
   Services,
+  Showcase,
+  Areas,
   Process,
+  TechStack,
+  Offer,
   Testimonials,
   CtaBand,
   Contact,
@@ -27,24 +32,30 @@ export default function App() {
   useSmoothScroll(ready)
 
   return (
-    <MotionConfig reducedMotion="user">
-      <AnimatePresence>{!ready && <Preloader key="pre" onDone={done} />}</AnimatePresence>
-      <ScrollProgress />
-      <CursorGlow />
-      <Navbar ready={ready} />
-      <main>
-        <Hero ready={ready} />
-        <LogoMarquee />
-        <About />
-        <Services />
-        <Process />
-        <Testimonials />
-        <CtaBand />
-        <Contact />
-      </main>
-      <Footer />
-      <BackToTop />
-      <CookieBanner ready={ready} />
-    </MotionConfig>
+    <LangProvider>
+      <MotionConfig reducedMotion="user">
+        <AnimatePresence>{!ready && <Preloader key="pre" onDone={done} />}</AnimatePresence>
+        <ScrollProgress />
+        <CursorGlow />
+        <Navbar ready={ready} />
+        <main>
+          <Hero ready={ready} />
+          <TechMarquee />
+          <About />
+          <Services />
+          <Showcase />
+          <Areas />
+          <Process />
+          <TechStack />
+          <Offer />
+          <Testimonials />
+          <CtaBand />
+          <Contact />
+        </main>
+        <Footer />
+        <BackToTop />
+        <CookieBanner ready={ready} />
+      </MotionConfig>
+    </LangProvider>
   )
 }
