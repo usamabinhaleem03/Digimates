@@ -37,6 +37,7 @@ import {
   Briefcase,
   Wrench,
   Headset,
+  Sparkles,
 } from 'lucide-react'
 import LogoMark from './Logo'
 import { Reveal, SplitText, TiltCard, SectionHead, Magnetic, ease } from './motion-utils'
@@ -85,6 +86,17 @@ const TECH = [
   { name: 'SQL', Icon: Database },
   { name: 'AI Agents', Icon: Bot },
   { name: 'Docker', Icon: Server },
+  { name: 'Microsoft Teams', Icon: Users },
+  { name: 'Copilot', Icon: Sparkles },
+  { name: 'OpenAI', Icon: Bot },
+  { name: 'Claude', Icon: Bot },
+  { name: 'Azure', Icon: Server },
+  { name: 'Make', Icon: Workflow },
+  { name: 'Zapier', Icon: Cable },
+  { name: 'React', Icon: Code },
+  { name: 'Node.js', Icon: Code },
+  { name: 'PostgreSQL', Icon: Database },
+  { name: 'GitHub', Icon: Boxes },
 ]
 
 export function TechMarquee() {
