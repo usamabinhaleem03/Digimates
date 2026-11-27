@@ -2112,3 +2112,66 @@ h4 {
   align-items: center;
   gap: 10px;
 }
+
+/* ---------- v3: client feedback (hero highlights, 5 hero cards) ---------- */
+.hero-highlights {
+  list-style: none;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 10px 20px;
+  margin: 40px 0 0;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(15, 23, 52, 0.7);
+  border: 1px solid var(--border);
+}
+.hero-highlights li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+.hero-highlights .hl-check {
+  color: #22d3ee;
+  flex-shrink: 0;
+}
+.hero-visual .float-card {
+  padding: 9px 12px;
+  gap: 10px;
+  border-radius: 13px;
+  z-index: 2;
+  white-space: nowrap;
+}
+.hero-visual .float-card .ic {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+.hero-visual .float-card b {
+  font-size: 12.5px;
+}
+.hero-visual .float-card small {
+  font-size: 11px;
+}
+@media (max-width: 1200px) {
+  .float-card-3 { left: -10% !important; }
+}
+@media (max-width: 640px) {
+  .hero-highlights { flex-wrap: wrap; }
+  .hero-visual .float-card { padding: 7px 10px; }
+  .hero-visual .float-card .ic { width: 24px; height: 24px; }
+  .hero-visual .float-card b { font-size: 11px; }
+  .hero-visual .float-card small { font-size: 10px; }
+  .float-card-1 { left: 0 !important; }
+  .float-card-2 { right: 0 !important; }
+  .float-card-3 { left: 0 !important; }
+  .float-card-4 { left: 0 !important; }
+  .float-card-5 { right: 0 !important; }
+}
+@media (max-width: 1180px) and (min-width: 641px) {
+  .hero-highlights { gap: 14px; padding: 12px 14px; }
+  .hero-highlights li { font-size: 13px; gap: 6px; }
+}

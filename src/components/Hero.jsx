@@ -6,9 +6,9 @@ import {
   useMotionValue,
   useSpring,
 } from 'motion/react'
-import { ArrowRight, Play, Workflow, Network, Sparkles } from 'lucide-react'
+import { ArrowRight, Play, Network, Sparkles, Bot, ChartColumn, LayoutGrid, Boxes, Check } from 'lucide-react'
 import { useLang } from '../i18n'
-import { SplitText, Counter, ease } from './motion-utils'
+import { SplitText, ease } from './motion-utils'
 import { scrollToId } from './Effects'
 
 /* Node graph inspired by the Digimates "D" mark */
@@ -34,6 +34,15 @@ const BARS = [
   { x: 74, h: 70 },
   { x: 112, h: 150 },
   { x: 150, h: 215 },
+]
+
+/* Where each floating card sits around the visual; dir = slide-in side */
+const CARD_LAYOUT = [
+  { Icon: Bot, pos: { top: '0%', left: '-14%' }, dir: -1 },
+  { Icon: ChartColumn, pos: { top: '6%', right: '-12%' }, dir: 1 },
+  { Icon: LayoutGrid, pos: { top: '44%', left: '-22%' }, dir: -1 },
+  { Icon: Boxes, pos: { bottom: '2%', left: '6%' }, dir: -1 },
+  { Icon: Network, pos: { bottom: '18%', right: '-14%' }, dir: 1 },
 ]
 
 function NetworkVisual({ ready }) {
@@ -199,46 +208,32 @@ function NetworkVisual({ ready }) {
         ))}
       </svg>
 
-      {/* Floating info cards */}
-      <motion.div
-        className="float-card"
-        style={{ top: '6%', left: '-6%' }}
-        initial={{ opacity: 0, x: -30 }}
-        animate={ready ? { opacity: 1, x: 0, y: [0, -12, 0] } : {}}
-        transition={{
-          opacity: { delay: 1.6, duration: 0.6 },
-          x: { delay: 1.6, duration: 0.6 },
-          y: { duration: 5, repeat: Infinity, ease: 'easeInOut' },
-        }}
-      >
-        <span className="ic">
-          <Network size={18} />
-        </span>
-        <div>
-          <b>{t.hero.cardA.title}</b>
-          <small>{t.hero.cardA.sub}</small>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="float-card"
-        style={{ bottom: '8%', right: '-4%' }}
-        initial={{ opacity: 0, x: 30 }}
-        animate={ready ? { opacity: 1, x: 0, y: [0, 12, 0] } : {}}
-        transition={{
-          opacity: { delay: 1.9, duration: 0.6 },
-          x: { delay: 1.9, duration: 0.6 },
-          y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
-        }}
-      >
-        <span className="ic">
-          <Workflow size={18} />
-        </span>
-        <div>
-          <b>{t.hero.cardB.title}</b>
-          <small>{t.hero.cardB.sub}</small>
-        </div>
-      </motion.div>
+      {/* Floating info cards (one per focus area) */}
+      {t.hero.cards.map((card, i) => {
+        const { Icon, pos, dir } = CARD_LAYOUT[i]
+        return (
+          <motion.div
+            key={i}
+            className={`float-card float-card-${i + 1}`}
+            style={pos}
+            initial={{ opacity: 0, x: dir * 30 }}
+            animate={ready ? { opacity: 1, x: 0, y: [0, dir * -10, 0] } : {}}
+            transition={{
+              opacity: { delay: 1.5 + i * 0.15, duration: 0.6 },
+              x: { delay: 1.5 + i * 0.15, duration: 0.6 },
+              y: { duration: 5 + i * 0.6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+          >
+            <span className="ic">
+              <Icon size={16} />
+            </span>
+            <div>
+              <b>{card.title}</b>
+              <small>{card.sub}</small>
+            </div>
+          </motion.div>
+        )
+      })}
     </motion.div>
   )
 }
@@ -328,14 +323,14 @@ export default function Hero({ ready }) {
               </motion.a>
           </motion.div>
 
-          <motion.div className="hero-stats" {...fadeUp(1)}>
-            {t.hero.stats.map((st) => (
-              <div key={st.label}>
-                <strong className="grad-text">{ready && <Counter to={st.to} suffix={st.suffix} />}</strong>
-                <span>{st.label}</span>
-              </div>
+          <motion.ul className="hero-highlights" {...fadeUp(1)}>
+            {t.hero.highlights.map((h) => (
+              <li key={h}>
+                <Check size={16} className="hl-check" />
+                <span>{h}</span>
+              </li>
             ))}
-          </motion.div>
+          </motion.ul>
         </motion.div>
 
         <motion.div style={{ y: yVisual }}>
